@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>排名系统</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        nav {
+            margin: 20px 0;
+        }
+        .table-container {
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            border: 1px solid #ddd;
+            overflow: hidden;
+        }
+        .header-table {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            width: 100%;
+            background-color: rgb(72,116,203);
+        }
+        .data-table {
+            flex: 1;
+            overflow-y: auto;
+            max-height: calc(80vh - 50px);
+        }
+        .table-row {
+            display: flex;
+            width: 100%;
+            min-width: 1200px;
+            border-bottom: 1px solid #ddd;
+        }
+        .table-cell {
+            padding: 15px 10px;
+            text-align: center;
+            font-size: 20px !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 0;
+            word-break: break-word;
+            border-right: 1px solid #ddd;
+        }
+        .header-cell {
+            background-color: rgb(72,116,203);
+            color: whitesmoke;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .data-table .table-row:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .data-table::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .data-table::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .data-table::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        .data-table::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .table-cell:last-child {
+            border-right: none;
+        }
+        .data-table .table-row:hover {
+            background-color: #f0f0f0;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        @media screen and (max-width: 1200px) {
+            .table-row {
+                min-width: 100%;
+            }
+        }
+        #navigation {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            width: 100%;
+        }
+        #navigation button {
+            font-size: 30px;
+            margin: 0 20px;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: rgb(72,116,203);
+        }
+        #navigation button.active {
+            background-color: #ff6b6b;
+            transform: scale(1.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .file-input-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #dddddd;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #file-name {
+            text-align: center;
+            color: whitesmoke;
+            font-size: 30px;
+            background-color: rgb(72,116,203);
+            padding: 10px 0;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .extra-boxes-container {
+            display: flex;
+            flex-direction:row ;
+            justify-content:space-around;
+            align-items: center;
+            margin-top: 20px;
+            width: 100%;
+            gap: 20px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+        .extra-box {
+            flex: 0 0 15vw; /* 使用视口宽度单位 */
+            aspect-ratio: 4 / 3; /* 设置宽高比为4:3 */
+            min-width: 100px; /* 设置最小宽度 */
+            max-width: 150px; /* 设置最大宽度 */
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: rgb(72,116,203);
+            color: whitesmoke;
+            text-align: center;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            word-break: break-word;
+        }
+        .logo-upload-box {
+            flex: 0 0 15vw; /* 使用视口宽度单位 */
+            aspect-ratio: 4 / 3; /* 设置宽高比为4:3 */
+            min-width: 100px; /* 设置最小宽度 */
+            max-width: 150px; /* 设置最大宽度 */
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            color: #333;
+            text-align: center;
+            border-radius: 5px;
+            display: flex;
+            flex-flow: nowrap;
+            justify-content: space-around;
+            align-items: center;
+            cursor: pointer;
+            overflow: hidden;
+            word-break: break-word;
+        }
+        .logo-upload-box input[type="file"] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="file-name"></div>
+    <nav id="navigation"></nav>
+    <div id="tables-container"></div>
+    <div class="extra-boxes-container" id="extra-boxes-container"></div>
+
+    <div class="file-input-container">
+        <input type="file" id="file-input" />
+    </div>
+
+    <script>
+        const tablesData = {};
+        const originalData = {};
+        let currentSheetIndex = 0;
+        let currentPageIndex = 0;
+        const itemsPerPage = 10;
+
+        document.getElementById('file-input').addEventListener('change', handleFileSelect, false);
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return; // 如果没有选择文件，直接返回
+
+            const fileNameWithoutExtension = file.name.replace(/\.xlsx$/, '');
+            document.getElementById('file-name').innerText = `${fileNameWithoutExtension}`;
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+
+                // 清空现有内容
+                document.getElementById('tables-container').innerHTML = '';
+                document.getElementById('navigation').innerHTML = '';
+                document.getElementById('extra-boxes-container').innerHTML = '';
+                
+                // 重置计数器
+                currentSheetIndex = 0;
+                currentPageIndex = 0;
+                
+                // 清空之前的数据
+                Object.keys(tablesData).forEach(key => delete tablesData[key]);
+                Object.keys(originalData).forEach(key => delete originalData[key]);
+
+                workbook.SheetNames.forEach((sheetName) => {
+                    const worksheet = workbook.Sheets[sheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+                    // 存储原始数据
+                    originalData[sheetName] = jsonData;
+
+                    // 存储表格数据，移除A列
+                    tablesData[sheetName] = jsonData.map(row => row.slice(1));
+
+                    // 创建导航按钮
+                    const navLink = document.createElement('button');
+                    navLink.innerText = sheetName;
+                    navLink.onclick = () => {
+                        currentSheetIndex = workbook.SheetNames.indexOf(sheetName);
+                        currentPageIndex = 0;
+                        showTable(sheetName);
+                        updateBoxesForSheet(sheetName);
+                    };
+                    document.getElementById('navigation').appendChild(navLink);
+                });
+
+                // 显示第一个表格
+                if (Object.keys(tablesData).length > 0) {
+                    const firstSheet = workbook.SheetNames[0];
+                    showTable(firstSheet);
+                    updateBoxesForSheet(firstSheet);
+                }
+            };
+
+            reader.readAsArrayBuffer(file);
+        }
+
+        function showTable(sheetName) {
+            const data = tablesData[sheetName];
+            const start = currentPageIndex * itemsPerPage;
+            const end = start + itemsPerPage;
+            
+            // 创建表格容器
+            const tableContainer = document.createElement('div');
+            tableContainer.className = 'table-container';
+            
+            // 创建表头
+            const headerTable = document.createElement('div');
+            headerTable.className = 'header-table';
+            
+            // 计算每列的基础宽度
+            const columnCount = data[0].length;
+            const baseWidth = `${100 / columnCount}%`;
+            
+            // 创建表头内容
+            headerTable.innerHTML = `
+                <div class="table-row header">
+                    ${data[0].map(cell => `
+                        <div class="table-cell header-cell" style="flex: 1 0 ${baseWidth}">
+                            ${cell || ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            // 创建数据部分
+            const dataTable = document.createElement('div');
+            dataTable.className = 'data-table';
+            
+            // 获取当前页的数据
+            const pageData = data.slice(Math.min(start + 1, data.length), Math.min(end + 1, data.length));
+            
+            // 创建数据行
+            dataTable.innerHTML = `
+                ${pageData.map(row => `
+                    <div class="table-row">
+                        ${row.map(cell => `
+                            <div class="table-cell" style="flex: 1 0 ${baseWidth}">
+                                ${cell || ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('')}
+            `;
+            
+            // 组装表格
+            tableContainer.appendChild(headerTable);
+            tableContainer.appendChild(dataTable);
+            
+            // 更新显示
+            document.getElementById('tables-container').innerHTML = '';
+            document.getElementById('tables-container').appendChild(tableContainer);
+            tableContainer.style.display = 'block';
+
+            // 更新导航按钮状态
+            updateActiveButton(sheetName);
+
+            // 更新底部盒子内容
+            updateBoxesForSheet(sheetName);
+
+            // 处理翻页切换
+            if (end < data.length - 1) {
+                currentPageIndex++;
+                setTimeout(() => showTable(sheetName), 20000); // 调整为20秒
+            } else {
+                currentPageIndex = 0;
+                currentSheetIndex++;
+                
+                if (currentSheetIndex >= Object.keys(tablesData).length) {
+                    currentSheetIndex = 0;
+                }
+                
+                setTimeout(() => showTable(Object.keys(tablesData)[currentSheetIndex]), 20000); // 调整为20秒
+            }
+        }
+
+        function updateBoxesForSheet(sheetName) {
+            const data = originalData[sheetName];
+            const boxContainer = document.getElementById('extra-boxes-container');
+            boxContainer.innerHTML = '';
+
+            // 获取A列数据
+            const aColumnData = [];
+            for(let i = 1; i < data.length; i++) {
+                if(data[i] && data[i][0] != null) {
+                    const value = String(data[i][0]).trim();
+                    if(value !== '') {
+                        aColumnData.push(value);
+                    }
+                }
+            }
+
+            // 创建数据盒子
+            aColumnData.forEach((content) => {
+                const box = document.createElement('div');
+                box.className = 'extra-box';
+                box.innerText = content;
+                boxContainer.appendChild(box);
+            });
+
+            // 添加上传 Logo 的盒子
+            const logoBox = document.createElement('div');
+            logoBox.className = 'logo-upload-box';
+            logoBox.innerText = '上传 Logo';
+            const logoInput = document.createElement('input');
+            logoInput.type = 'file';
+            logoInput.onchange = handleLogoUpload;
+            logoBox.appendChild(logoInput);
+            logoBox.onclick = () => logoInput.click();
+            boxContainer.appendChild(logoBox);
+        }
+
+        function updateActiveButton(sheetName) {
+            const buttons = document.querySelectorAll('#navigation button');
+            buttons.forEach(button => {
+                if (button.innerText === sheetName) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+        }
+
+        function handleLogoUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const logoBox = event.target.parentElement;
+                    logoBox.style.backgroundImage = `url(${e.target.result})`;
+                    logoBox.style.backgroundSize = 'cover';
+                    logoBox.style.backgroundPosition = 'center';
+                    logoBox.innerText = ''; // 清除文字
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>
+
