@@ -4,11 +4,6 @@
             <div class='left-box'>文件上传(input):</div>
             <input type='file' v-on:change='onChange' class='file-ipt' />
         </div>
-
-    <!-- <el-upload action="#" :auto-upload="false" :on-change="onChange" accept=".xls,.xlsx">
-        <el-button type="primary">上传excel</el-button>
-    </el-upload> -->
-
     <!-- 表头 -->
     <div class="table-header">{{tableHeader}}</div>
     <div class="table-sub-header">{{tableSubHeader}}</div>
@@ -22,20 +17,28 @@
         max-height="500px"
         :cell-style="{ textAlign: 'center' }"
         :header-cell-style="{ textAlign: 'center' }"
-        :span-method="objectSpanMethod"
+        :span-method="handleSpanMethod"
         empty-text="暂无数据..."
         @mouseenter.native="autoScroll(true)"
         @mouseleave.native="autoScroll(false)"
       >
-        <el-table-column
-          v-for="item in columns" 
-          :key="item.index"
+      <el-table-column
           sortable
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width"
+          :prop="firstColumn"
+          :label="firstColumn"
+          style="width: 100%"
         >
+            <el-table-column
+            v-for="item in columns" 
+            :key="item.index"
+            sortable
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            >
+            </el-table-column>
         </el-table-column>
+
       </el-table>
     </div>
 </template>
@@ -51,6 +54,8 @@
     export default {
     data() {
         return {
+        firstColumn: null,
+        firstColumnList: [],
         showUpload: true,
         tableSubHeader:'',
         tableHeader: '',
@@ -71,6 +76,82 @@
         // this.screenListener()
     },
     methods: {
+        // 设置合并行
+        setrowspans() {
+            const columns = JSON.parse(JSON.stringify(this.columns)); // 需要合并的列名
+            // 为每个需要合并的列设置默认 rowspan 
+            this.showData.forEach(row => {
+                columns.forEach(col => {
+                    row[col + 'Rowspan'] = 1; // 例如：row['name1Rowspan'] = 1
+                });
+            });
+
+            columns.forEach((col, index) => {
+                for (let i = 0; i < this.showData.length; i++) {
+                    // 这里进行判断
+                    // 如果当前行的列数据和下一行的列数据相等
+                    // 就把当前rowspan + 1，下一行的rowspan - 1
+                    for (let j = i + 1; j < this.showData.length; j++) {
+                        if (this.showData[i][col] === this.showData[j][col]) {
+                            this.showData[i][col + 'Rowspan']++;
+                            this.showData[j][col + 'Rowspan']--;
+                        } else {
+                            break; // 如果不相等，跳出循环，因为已经没有相同的了
+                        }
+                    }
+                    // 这里跳过已经重复的数据
+                    i = i + this.showData[i][col + 'Rowspan'] - 1;
+                }
+            });
+        },
+
+        // 合并行
+        arraySpanMethod({ row, column, rowIndex, columnIndex }) {
+            // 根据列索引决定合并哪一列
+            if (columnIndex === 1 || columnIndex === 3) { // 这里可能需要调整，根据你实际的列数
+                return {
+                    rowspan: row[column.property + 'Rowspan'],
+                    colspan: 1
+                };
+            }
+        }, 
+
+        handleSpanMethod({
+        row, // 行
+        column, // 列
+        rowIndex, // 行索引
+        columnIndex, // 列索引
+        }) {
+            if (columnIndex === 0 || columnIndex === 1) {
+                // 获取当前单元格的值
+                const currentValue = row[column.property];
+        
+                // 获取上一行相同列的值
+                const preRow = this.showData[rowIndex - 1];
+                const preValue = preRow ? preRow[column.property] : null;
+        
+                // 如果当前值和上一行的值相同，则将当前单元格隐藏
+                if (currentValue === preValue) {
+                return {
+                rowspan: 0, colspan: 0 };
+                    } else {
+                    // 否则计算当前单元格应该跨越多少行
+                    let rowspan = 1;
+                    for (let i = rowIndex + 1; i < this.tableData.length; i++) {
+                        const nextRow = this.tableData[i];
+                        const nextValue = nextRow[column.property];
+                        if (nextValue === currentValue) {
+                        rowspan++;
+                        } else {
+                        break;
+                        }
+                    }
+                    return {
+                    rowspan, colspan: 1 };
+                }
+            }
+        },
+
         objectSpanMethod({row, column, rowIndex, columnIndex}){
             console.log(row, column, rowIndex, columnIndex);
 
@@ -99,6 +180,15 @@
                 }
             }
         },
+
+
+        /** 
+         * 分隔符
+         * 
+         * 
+         * 分隔符
+         * 
+        */
 
         //  读取文件成功后，全屏显示，隐藏上传按钮
         changeFullscreen() {
@@ -182,11 +272,9 @@
                 dataList: utils.sheet_to_json(workbook.Sheets[item])
                 });
                 this.tableData.push(utils.sheet_to_json(workbook.Sheets[item]));
-            });
+            });            
             console.log(this.tableData);
             
-            
-
             // 该算法仅针对表头无合并的情况
             if (this.tableData.length > 0) {
                 this.sheetLength = this.tableData.length
@@ -194,8 +282,13 @@
                 for (let i = 0; i < this.tableData.length; i++) {
                     
                     const columns = []
-                    const element = this.tableData[i]
-                    for (const key in this.tableData[i][0]) {
+                    this.firstColumnList.push(
+                        {
+                            label: this.tableData[i][0],
+                            prop: this.tableData[i][0],
+                        }
+                    )                    
+                    for (const key in this.tableData[i][1]) {
                         const column = {
                             label: key,
                             prop: key,
@@ -222,6 +315,9 @@
                 this.columns = this.columnsList[0]
                 this.tableHeader = params[0].name
                 this.showData = params[0].dataList
+                console.log('1111', this.columnsList[0]);
+                
+                this.firstColumn = this.columnsList[0]
             }
             this.changeFullscreen()
             //  赋值sheetName
