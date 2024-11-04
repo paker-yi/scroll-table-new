@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box{
+            width: 200px;
+            height: 200px;
+            background-color: red;
+        }
+        @media screen and (max-width: 768px) {
+            .box{
+                background-color: greenyellow;
+            }
+            .p1{
+                display: none;
+            }
+            .p2{
+                display: none;
+            }
+        }
+        @media screen and (min-width: 768px) and (max-width: 996px) {
+            .box{
+                background-color: rgb(102, 97, 249);
+            }
+            .p1{
+                display: block;
+            }
+            .p2{
+                display: none;
+            }
+        }
+        @media screen and (min-width: 996px) {
+            .box{
+                background-color: rgb(244, 170, 13);
+            }
+            .p1{
+                display: block;
+            }
+            .p2{
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="box"></div>
+    <div class="p1">hhhhh</div>
+    <div class="p2">哈哈哈哈哈</div>
+    
+</body>
+</html>

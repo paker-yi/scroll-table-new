@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日程表</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+    <div class="app" id="app">
+        <div class="calendar">
+            <div class="bg_box">
+                <!-- 显示边框 -->
+                <table>
+                    <thead>
+                        <tr>
+                            <td v-for="(item,index) in dayofweek">{{item}}</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in 6"><td v-for="item in 7"></td></tr>
+                    </tbody>
+                    <!-- <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody> -->
+                </table>
+                
+            </div>
+            <div class="schedule_box">
+                <div class="row">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>5</th>
+                                <th>6</th>
+                                <th>7</th>
+                                <th>8</th>
+                                <th>9</th>
+                                <th>10</th>
+                                <th>11</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="schedule life"><div>买花</div></td>
+                                <td class="schedule life"><div>买花</div></td>
+                                <td class="schedule life"><div>买花</div></td>
+                                <td class="schedule life"><div>买花</div></td>
+                                <td class="schedule life"><div>买花</div></td>
+                                <td class="schedule life"><div>买花</div></td>
+                                <td class="schedule life"><div>买花</div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>12</th>
+                                <th>13</th>
+                                <th>14</th>
+                                <th>15</th>
+                                <th>16</th>
+                                <th>17</th>
+                                <th>18</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+    <script type="text/javascript" src="./js/vue.min.js"></script>
+    <script type="text/javascript">
+        new Vue({
+            el:"#app",
+            data: {
+                "dayofweek":["周日","周一","周二","周三","周四","周五","周六"]
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo02</title>
+
+</head>
+
+<body>
+<div id = "app">
+    <button v-on:click="sayHi">点我</button>
+</div>
+<script src="./js/vue.min.js"></script>
+<script>
+        var vm = new Vue({
+        el: "#app",
+        data: {
+            message:"狂神说java",
+        },
+        methods:{
+            sayHi: function(){
+                alert(this.message);
+            }
+        }
+    });
+
+</script>
+
+</body>
+</html>

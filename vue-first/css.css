@@ -1,0 +1,81 @@
+
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .calendar{
+            width: 1000px;
+            height: 630px;
+            margin: 0 auto;
+            border: 1px solid #000000;
+            position: relative;
+        }
+        .calendar .bg_box{
+            width: 1000px;
+            height: 630px;
+        }
+        .calendar .bg_box table{
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .calendar .bg_box table thead tr{
+            height: 30px;
+            text-align: center;
+        }
+        .calendar .bg_box table tbody tr{
+            height: 100px;
+        }
+        .calendar .bg_box table tbody td{
+            border: 1px solid #333;
+    
+        }
+        .calendar .schedule_box{
+            width: 1000px;
+            height: 600px;
+            top: 30px;
+            left: 0;
+            position: absolute;
+            border: 1px solid red;
+        }
+        .calendar .schedule_box .row{
+            height: 100px;
+            border: 1px solid transparent;
+            box-sizing: border-box;
+        }
+        .calendar .schedule_box .row table{
+            width: 100%;
+        }
+        .calendar .schedule_box .row table thead{
+            height: 20px;
+        }
+        .calendar .schedule_box .row table thead tr{
+            height: 20px;
+        }
+        .calendar .schedule_box .row table thead th{
+            width: 14.285714285714286%;
+            height: 20px;
+            text-align: right;
+            box-sizing: border-box;
+            padding-right: 6px;
+            padding-top: 4px;
+            line-height: 16px;
+            font-size: 16px;
+            font-family: "consolas";
+        }
+        .calendar .schedule_box .row table thead td{
+            width: 14.285714285714286%;
+           
+        }
+        .calendar .schedule_box .row table tbody td{
+            width: 14.285714285714286%;
+            padding: 6px;
+            box-sizing: border-box;
+        }
+        .schedule div{
+            border-radius: 15px;
+            font-size: 14px;
+            padding: 8px;
+        }
+        .schedule.life div{
+            background-color: yellowgreen;
+        }

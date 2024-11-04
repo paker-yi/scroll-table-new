@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        @keyframes myAnimation{
+            0%{
+                left: 0px;
+            }
+            25%{
+                left: 200px;
+            }
+            50%{
+                left: 300px;
+            }
+            75%{
+                left: 200px;
+            }
+            100%{
+                left: 0px;
+            }
+        }
+        @keyframes breath{
+            0%{
+                background-color: rgba(0, 0, 0, 0);
+            }
+            25%{
+                background-color: rgba(0, 0, 0, 0.2);
+            }
+            50%{
+                background-color: rgba(0, 0, 0, 0.7);
+            }
+            75%{
+                background-color: rgba(0, 0, 0, 0.2);
+            }
+            100%{
+                background-color: rgba(0, 0, 0, 0);
+            }
+        }
+        .trans{
+            width: 100px;
+            height: 100px;
+            background-color: aquamarine;
+            position: relative;
+            /* animation: breath 3s ease-out 0s infinite normal; */
+        }
+        .trans:hover{
+            background-color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="trans"></div>
+    
+</body>
+</html>

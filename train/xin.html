@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            height: 100%;
+            width: 100%;
+        }
+        body{
+            /* width: 100vw;
+            height: 100vh; */
+            background-color: pink;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+        .heart{
+            position: relative;
+            box-shadow: 0 0 20px red;
+            width: 200px;
+            height: 200px;
+            background-color: red;
+            transform: rotate(45deg);
+            /* overflow: visible; */
+            animation: heartbeat 1s linear infinite normal ;
+        }
+        .heart::after{
+            box-shadow: 0 0 20px red;
+            content: "";
+            height: 100px;
+            width: 200px;
+            background-color: red;
+            position: absolute;
+            left: 0;
+            top: -99px;
+            border-radius: 100px 100px 0 0;
+        }
+        .heart::before{
+            box-shadow: 0 0 20px red;
+            content: "";
+            height: 200px;
+            width: 100px;
+            background-color: red;
+            position: absolute;
+            left: -99px;
+            top: 0px;
+            border-radius: 100px 0 0  100px;
+        }
+        @keyframes heartbeat{
+            0%{
+                transform: rotate(45deg) scale(0.7)
+            }
+            25%{
+                transform: rotate(45deg) scale(0.8)
+            }
+            50%{
+                transform: rotate(45deg) scale(1)
+            }
+            75%{
+                transform: rotate(45deg) scale(0.8)
+            }
+            100%{
+                transform: rotate(45deg) scale(0.7)
+            }
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="heart"></div>
+</body>
+</html>

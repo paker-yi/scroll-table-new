@@ -1,0 +1,29 @@
+.text-class{
+    text-align: left;
+    text-transform: capitalize;
+    text-indent: 2em;
+}
+table,tr,td{
+    border: 1px solid red;
+}
+table{
+    border-collapse: collapse;
+    /* width: 400px;
+    height: 300px; */
+}
+td{
+    text-align: center;
+    vertical-align: top;
+    padding: 20px;
+    background-color: bisque;
+
+}
+/* ul>li{
+    color: red;
+} */
+div>p{
+    color: red;
+}
+div~p{
+    color: red;
+}

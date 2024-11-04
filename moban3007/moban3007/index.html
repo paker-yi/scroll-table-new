@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html lang="zxx">
+
+<head>
+	<title>Home</title>
+	<meta charset="UTF-8" />
+</head>
+<body class="body">
+	<div class="form">
+			<h2>Login Now</h2>
+			<form>
+				<div class="inputBox">
+					<input name="Name" type="text" required="" >
+					<label>用户名：</label>
+				</div>
+				<div class="inputBox">
+					<input  name="Password" type="password" required="" >
+					<label>密码：</label>
+				</div>
+				
+					<li>
+						<label >
+							<input type="checkbox" class="checkbox" required="">
+							<span>Stay Signed In</span>
+						</label>
+					</li>
+					<li>
+						<a style="color: white;text-decoration:none;"  href="#">Forgot Password?</a>
+					</li>
+					<input class="loginbutton" type="submit" value="Log In">
+
+
+			</form>
+	</div>
+
+</body>
+<style>
+	.body{
+		margin: 0;
+		padding: 0;
+		font-family: sans-serif;
+		background-image: url(IMG_2971.jpg);
+		background-repeat:no-repeat;
+		background-attachment:fixed;
+		background-size:100% 100%;
+	}
+	.form{
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%,-50%);
+		width: 400px;
+		padding: 40px;
+		background-color: rgba(0,0,0,0.6);
+		box-sizing: border-box;
+		box-shadow: 0 20px 30px rgba(0,0,0,0.5);
+		border-radius: 10px;
+	}
+	.form h2{
+		margin: 0 0 30px;
+		padding:0;
+		color: #fff;
+		text-align: center;
+	}
+	.form .inputBox{
+		position: relative;
+	}
+	.form .inputBox  input{
+		width: 100%;
+		padding: 10px 0;
+		font-size:15px;
+		color: #fff;
+		margin-bottom: 30px;
+		background: transparent;
+		border: none;
+		border-bottom: 1px solid #fff;
+		outline: none;
+	}
+	.form .inputBox  label{
+		position: absolute;
+		top:0px;
+		left:0px;
+		padding:10px 0;
+		font-size: 16px;
+		color: #fff;
+		pointer-events: none;
+		transition: .5s;
+	}
+	.form .inputBox input:focus ~ label,
+	.form .inputBox input:valid ~ label{
+		top: -25px;
+		left:0;
+		color: #043d6b;
+		font-size: 16px;
+	}
+	/* .form input[type="submit"]{
+		background: transparent;
+		border:none;
+		outline: none;
+		color:#fff;
+		background: #57b4da;
+		padding: 10px 20px;
+		border-radius: 10px;
+	} */
+	.checkbox{
+	-webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    height: .5rem;
+    border-color: transparent;
+    border-right-color: transparent;
+    animation: .4s rippling .4s ease;
+    animation-fill-mode: forwards;
+	}
+	.loginbutton{
+		top:20px;
+		border:0;
+		width: 100%;
+		height: 25px;
+		margin-top:30px;
+		text-align: center;
+		border-radius: 25px;
+		font-size: 15px;
+     	background: #55a8a8;
+     	max-width: 290px;
+     	width: 100%;
+     	transition: ease-in all 0.5s;
+     	color: #fff;
+     	display: block;
+     	margin: 0 auto;
+     	text-align: center;
+     	font-weight: 500;
+	}
+</style>
+
+</html>

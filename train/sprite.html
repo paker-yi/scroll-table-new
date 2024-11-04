@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        .slider{
+            width: 200px;
+            height: 300px;
+            background-color: rgb(201, 201, 201);
+            position: relative;
+        }
+        .slider ul{
+            list-style: none;
+        }
+        .slider ul li{
+            width: 100%;
+            height: 42px;
+            line-height: 42px;
+            text-align: left;
+            padding-left: 30px;
+        }
+        .slider ul li a{
+            display: inline-block;
+            text-decoration: none;
+            color: #fff;
+
+        }
+        .slider ul li:hover{
+            background-color: aliceblue;
+            
+        }
+        .slider ul li a:hover{
+            color: aquamarine;
+        }
+        .slider-list{
+            width: 900px;
+            height: 298px;
+            background-color: #6fbfea;
+            position: absolute;
+            top: 0;
+            left: 200px;
+            border: 1px solid #e0e0e0;
+            border-left: none;
+            display: none;
+        }
+        .slider ul li:hover > .slider-list{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="slider">
+        <ul>
+            <li>
+                <a href="#">手机</a>
+                <div class="slider-list">小米10</div>
+                <div class="slider-list">小米14u</div>
+                <div class="slider-list">红米k70</div>
+            </li>
+            <li>
+                <a href="#">平板</a>
+                <div class="slider-list">ipad pro</div>
+                <div class="slider-list">ipad 2023</div>
+            </li>
+            <li>
+                <a href="#">电脑</a>
+                <div class="slider-list">小米电视1</div>
+                <div class="slider-list">小米电视2</div>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

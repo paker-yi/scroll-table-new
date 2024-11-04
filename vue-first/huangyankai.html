@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生进出校报备结果页</title>
+</head>
+<body>
+    <div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="5vh"  class="tabtop13" align="center">
+                <tr>
+                  <td class="td1">姓名</td>
+                  <td class="td2">黄言凯</td>
+                </tr>
+                <tr>
+                    <td class="td1">学号</td>
+                    <td class="td2">201854644</td>
+                </tr>
+                <tr>
+                    <td class="td1">学院</td>
+                    <td class="td2">通信与信息工程学院</td>
+                </tr>
+                <tr>
+                    <td class="td1">年级</td>
+                    <td class="td2">2018</td>
+                </tr>
+                <tr>
+                    <td class="td1">班级</td>
+                    <td class="td2">0124556</td>
+                </tr>
+        </table>
+    </div>
+    <div style="height: vh;"></div>
+    <div class="block">
+        <h1>出校<br>已报备</h1>
+        
+    </div>
+    <div>
+        <p id="timeshow"></p>
+    </div>
+</body>
+<style>
+    .td1{
+    
+        border-bottom: 1px solid;border-color: #cccccc;position: relative;left: 0;text-align: left;
+    }
+    .td2{
+        border-bottom: 1px solid;border-color: #cccccc;position: relative;left: 0;text-align: right;
+    }
+    
+    .block{
+        /* margin: auto; */
+        position: relative;
+        left: 30vh;
+        top: 60%;
+        width: 40vh;
+        height: 40vh;
+        background-color: rgb(9, 119, 221);
+    }
+    h1{
+        position: relative;
+        top: 20%;
+        /* padding: 10%; */
+        font-size: 4vh;
+        text-align: center;
+        color: white;
+        line-height: 8vh;
+    }
+</style>
+<script> 
+    function show(){ 
+    var date = new Date(); //日期对象 
+    var now = " "; 
+    now = date.getFullYear()+"年"; //读英文就行了 
+    now = now + (date.getMonth()+1)+"月"; //取月的时候取的是当前月-1如果想取当前月+1就可以了 
+    now = now + date.getDate()+"日"; 
+    now = now + date.getHours()+"时"; 
+    now = now + date.getMinutes()+"分"; 
+    now = now + date.getSeconds()+"秒"; 
+    document.getElementById("timeshow").innerHTML = now; //div的html是now这个字符串 
+    setTimeout("show()",1000); //设置过1000毫秒就是1秒，调用show方法 
+    } 
+</script> 
+</html>

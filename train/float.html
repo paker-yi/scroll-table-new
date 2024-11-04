@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container{
+            width: 600px;
+            /* height: 600px; */
+            background-color: red;
+        }
+        .container::after{
+            content: "";
+            clear: both;
+            display: block;
+        }
+        .box1{
+            width: 100px;
+            height: 100px;
+            background-color: aqua;
+            float: left;
+        }
+        .box2{
+            width: 100px;
+            height: 100px;
+            background-color: aqua;
+            float: left;
+        }
+        img{
+            width: 300px;
+            height: 300px;
+            float: left;
+        }
+        .out{
+            clear: both;
+            width: 100px;
+            height: 200px;
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box1"></div>
+        <div class="box2"></div>
+        <img src="../first-page/src/assets/bg.webp" alt="">
+        <img src="../first-page/src/assets/bg.webp" alt="">
+    <div class="out">1111</div>
+
+    </div>
+
+    
+</body>
+</html>

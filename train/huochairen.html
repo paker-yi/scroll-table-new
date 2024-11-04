@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .container{
+            height: 300px;
+            width: 100vw;
+            position: relative;
+            background-color: #000;
+        }
+        .person{
+            position: absolute;
+            left: 140px;
+            top: 150px;
+            animation: run 3s linear 0s infinite normal;
+        }
+        .head{
+            position: absolute;
+            height: 30px;
+            width: 30px;
+            border: 10px solid #fff;
+            border-radius: 50%;
+            top: -80px;
+            left: -10px;
+            animation: head 2s linear 0s infinite alternate;
+        }
+        .body{
+            width: 0;
+            height: 80px;
+            border-left: 10px solid #fff;
+            position: absolute;
+            left: 10px;
+            top: -40px;
+        }
+        .person .part{
+            position: absolute;
+            left: 0;
+            top: 15px;
+        }
+        .person .part.arm{
+            width: 40px;
+            height: 45px;
+            border-left: 10px solid #fff;
+            border-bottom: 10px solid #fff;
+            position: absolute;
+            left: 10px;
+            top: -15px;
+            transform-origin: 0% 0% 0px;
+            animation: arm 2s linear 0s infinite alternate;
+            /* border: 0 0 10px 10px solid #fff; */
+        }
+        .person .part.arm.one{
+            transform: rotate3d(0,0,1,80deg);
+        }
+        .person .part.arm.two{
+            transform: rotate3d(0,0,1,-30deg);
+            animation-delay: -1s;
+        }
+        .person .part.leg{
+            width: 60px;
+            height: 60px;
+            /* border: 0 0 10px 10px solid red; */
+            border-top: 10px solid #fff;
+            border-right: 10px solid #fff;
+            left: 20px;
+            top: 40px;
+            position: absolute;
+            transform-origin: 0% 0% 0px;
+            animation: leg 2s linear 0s infinite alternate;
+        }
+        .person .part.leg.one{
+            transform: rotate3d(0,0,1,80deg);
+        }
+        .person .part.leg.two{
+            transform: rotate3d(0,0,1,20deg);
+            animation-delay: -1s;
+        }
+        /* 头部动画 */
+        @keyframes head{
+             0%{
+                transform: rotate3d(0,0,1,5deg);
+             }
+             25%{
+                transform: rotate3d(0,0,1,-30deg) skew(15deg,0deg);
+             }
+             50%{
+                transform: rotate3d(0,0,1,10deg);
+             }
+             75%{
+                transform: rotate3d(0,0,1,-30deg) skew(15deg,0deg);
+             }
+             100%{
+                transform: rotate3d(0,0,1,20deg) skew(-15deg,0deg);
+             }
+        }
+        /* 胳膊动画 */
+        @keyframes arm{
+            0%{
+                transform: rotate3d(0,0,1,80deg);
+            }
+            50%{
+                transform: rotate3d(0,0,1,-30deg);
+            }
+            100%{
+                transform: rotate3d(0,0,1,80deg);
+            }
+        }
+        @keyframes leg{
+            0%{
+                transform: rotate3d(0,0,1,130deg);
+            }
+            50%{
+                transform: rotate3d(0,0,1,20deg);
+            }
+            100%{
+                transform: rotate3d(0,0,1,130deg);
+            }
+        }
+        @keyframes run{
+            0%{
+                transform: translate(-200px,0px);
+            }
+            100%{
+                transform: translate(1800px,0px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="person">
+            <div class="head"></div>
+            <div class="part arm one"></div>
+            <div class="part arm two"></div>
+            <div class="body"></div>
+            <div class="part leg one"></div>
+            <div class="part leg two"></div>
+        </div>
+        
+    </div>
+    
+</body>
+</html>
