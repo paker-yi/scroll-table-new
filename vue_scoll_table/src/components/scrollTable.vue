@@ -22,6 +22,7 @@
         max-height="500px"
         :cell-style="{ textAlign: 'center' }"
         :header-cell-style="{ textAlign: 'center' }"
+        :span-method="objectSpanMethod"
         empty-text="暂无数据..."
         @mouseenter.native="autoScroll(true)"
         @mouseleave.native="autoScroll(false)"
@@ -62,69 +63,40 @@
         columns: [],
         columnsList: [],
         currentSheetIndex: 0,
+        spanArr: [],
+        pos: 0,
         };
     },
     mounted(){
         // this.screenListener()
     },
     methods: {
-        // 合并单元格方法
+        objectSpanMethod({row, column, rowIndex, columnIndex}){
+            console.log(row, column, rowIndex, columnIndex);
 
-        /**
-         * 合并单元格
-         * TableData:传递过来的表格数据
-         * itemName：属性名
-         * rowIndex：行索引值
-         * */
-        MergeCol: (TableData, itemName, rowIndex) => {
-            // 合并单元格
-            // id：属性名
-            // rowIndex：行索引值
-            var idName = TableData[rowIndex][itemName]; // 获取当前单元格的值
-            if (rowIndex > 0) {
-            // 判断是不是第一行
-            // eslint-disable-next-line eqeqeq
-            if (TableData[rowIndex][itemName] != TableData[rowIndex - 1][itemName]) {
-                // 先判断当前单元格的值是不是和上一行的值相等
-                var i = rowIndex;
-                var num = 0; // 定义一个变量i，用于记录行索引值并进行循环，num用于计数
-                while (i < TableData.length) {
-                // 当索引值小于table的数组长度时，循环执行
-                if (TableData[i][itemName] === idName) {
-                    // 判断循环的单元格的值是不是和当前行的值相等
-                    i++; // 如果相等，则索引值加1
-                    num++; // 合并的num计数加1
-                } else {
-                    i = TableData.length; // 如果不相等，将索引值设置为table的数组长度，跳出循环
-                }
-                }
-                return {
-                rowspan: num, // 最终将合并的行数返回
-                colspan: 1,
-                };
-            } else {
-                return {
-                rowspan: 0, // 如果相等，则将rowspan设置为0
-                colspan: 1,
-                };
+            for (let index = 0; index < array.length; index++) {
+                const element = array[index];
+                
             }
-            } else {
-            // 如果是第一行，则直接返回
-            let i = rowIndex;
-            let num = 0;
-            while (i < TableData.length) {
-                // 当索引值小于table的数组长度时，循环执行
-                if (TableData[i][itemName] === idName) {
-                i++;
-                num++;
-                } else {
-                i = TableData.length;
-                }
+            
+        },
+        // 合并单元格方法
+        getSpanArr(data) {
+            //  计算rowSpan
+            for (let index = 0; index < array.length; index++) {
+                const element = array[index];
+                
             }
-            return {
-                rowspan: num,
-                colspan: 1,
-            };
+        },
+        handleSpan ({ row, column, rowIndex, columnIndex }){
+            //只合并列字段为date的行
+            if (columnIndex === 0 ) {
+                return {
+                    //将需要合并的行数赋值给 _row，注意这里由上一个方法的输出[1,1,2,0]可以知道，
+                    rowspan: this.spanArr[rowIndex],
+                    //colspan有两种情况要不是0不显示，要不是1显示，根据rowspan（ _row）来确定；
+                    colspan: _row > 0 ? 1 : 0
+                }
             }
         },
 
@@ -211,6 +183,8 @@
                 });
                 this.tableData.push(utils.sheet_to_json(workbook.Sheets[item]));
             });
+            console.log(this.tableData);
+            
             
 
             // 该算法仅针对表头无合并的情况
