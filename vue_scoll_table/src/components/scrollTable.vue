@@ -23,10 +23,10 @@
         @mouseleave.native="autoScroll(false)"
       >
       <el-table-column
-          sortable
-          :prop="firstColumn"
-          :label="firstColumn"
-          style="width: 100%"
+        v-if="firstColumn"
+        :prop="firstColumn.prop"
+        :label="firstColumn.label"
+        style="width: 100%"
         >
             <el-table-column
             v-for="item in columns" 
@@ -272,9 +272,9 @@
                 dataList: utils.sheet_to_json(workbook.Sheets[item])
                 });
                 this.tableData.push(utils.sheet_to_json(workbook.Sheets[item]));
-            });            
-            console.log(this.tableData);
-            
+            });        
+            console.log('tableData', this.tableData);
+
             // 该算法仅针对表头无合并的情况
             if (this.tableData.length > 0) {
                 this.sheetLength = this.tableData.length
@@ -282,24 +282,31 @@
                 for (let i = 0; i < this.tableData.length; i++) {
                     
                     const columns = []
-                    this.firstColumnList.push(
-                        {
-                            label: this.tableData[i][0],
-                            prop: this.tableData[i][0],
+                    if (i === 1) {
+                        this.firstColumnList.push(
+                            {
+                                label: this.tableData[i][0],
+                                prop: this.tableData[i][0],
+                            }
+                        )
+                    }else{
+                        
+                        for (const key in this.tableData[i][1]) {
+                            const column = {
+                                label: key,
+                                prop: key,
+                            }
+                            columns.push(column)
+                            this.columnsList.push(columns)
                         }
-                    )                    
-                    for (const key in this.tableData[i][1]) {
-                        const column = {
-                            label: key,
-                            prop: key,
-                        }
-                        columns.push(column)
                     }
+                    
+                        
+                    
                     // for (let i = 0; i < columns.length; i++) {
                     //     const element = columns[i];
                     //     element.width = 100/columns.length + '%'
                     // }
-                    this.columnsList.push(columns)
                 }
                 
                 for (const key in this.tableData[0][0]) {
@@ -314,10 +321,18 @@
             if(params.length > 0){
                 this.columns = this.columnsList[0]
                 this.tableHeader = params[0].name
-                this.showData = params[0].dataList
-                console.log('1111', this.columnsList[0]);
+                this.showData = params[0].dataList.shift()
+                console.log('展示数据', params[0]);
                 
-                this.firstColumn = this.columnsList[0]
+                         
+                // const column = {
+                //     label: this.columnsList[0][0],
+                //     prop: this.columnsList[0][0],
+                //     rowSpan: this.firstColumnList.length
+                // }
+                const column = JSON.parse(JSON.stringify(this.columnsList[0][0]))
+                column.rowSpan = this.firstColumnList.length     
+                this.firstColumn = column
             }
             this.changeFullscreen()
             //  赋值sheetName
