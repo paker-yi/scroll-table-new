@@ -54,6 +54,7 @@
     export default {
     data() {
         return {
+        dataStartIndex: 1,//   从第二位开始
         firstColumn: null,
         firstColumnList: [],
         showUpload: true,
@@ -258,22 +259,29 @@
         },
         //  读取文件
         onChange(e) {
+            
         const file = e.target.files[0];
         const fileReader = new FileReader();
         fileReader.onload = ev => {
             try {
             const data = ev.target.result;
             const workbook = read(data, { type: 'binary' });
+            console.log('workbook', workbook);
+            
             const params = [];
             // 取对应表生成json表格内容
             workbook.SheetNames.forEach(item => {
+                // columnList: columnList,
+                // tableData:tableData
+                const {columnList, tableData} = this.getHeadersAndData(utils.sheet_to_json(workbook.Sheets[item]))
+                console.log('columns:', columnList, 'data', tableData);
+                
                 params.push({
                 name: item,
                 dataList: utils.sheet_to_json(workbook.Sheets[item])
                 });
-                this.tableData.push(utils.sheet_to_json(workbook.Sheets[item]));
+                this.tableData.push(this.getTableData(utils.sheet_to_json(workbook.Sheets[item])));
             });        
-            console.log('tableData', this.tableData);
 
             // 该算法仅针对表头无合并的情况
             if (this.tableData.length > 0) {
@@ -300,13 +308,6 @@
                             this.columnsList.push(columns)
                         }
                     }
-                    
-                        
-                    
-                    // for (let i = 0; i < columns.length; i++) {
-                    //     const element = columns[i];
-                    //     element.width = 100/columns.length + '%'
-                    // }
                 }
                 
                 for (const key in this.tableData[0][0]) {
@@ -343,7 +344,6 @@
             return false;
             }
         };
-        
         fileReader.readAsBinaryString(file);
         },
         handleChange(res, file, fileList) {
@@ -361,6 +361,53 @@
             const files = { 0: file };
             this.readExcel(files);
         },
+        getHeadersAndData(data){
+            // console.log('提取表头', data);
+            const oldKey = [];
+            const columnList = []
+            const tableData = []
+            for (let i = 0; i < data.length; i++) {
+                const element = data[i]
+                if (i<this.dataStartIndex) {
+                    for (const key in element) {
+                        if (Object.prototype.hasOwnProperty.call(element, key)) {
+                            const item = element[key];
+                            oldKey.push(key)
+                                const column = {
+                                    label: item,
+                                    prop: item
+                                }
+                            columnList.push(column)
+                        }
+                    }
+                }
+                if (i>this.dataStartIndex){
+                    const tableItem = {}
+                    for (let j = 0; j < oldKey.length; j++) {
+                        const key = oldKey[j];
+                        const prop = columnList[j].prop
+                        // console.log('prop:',prop, 'key:', key, 'value:', element[key]);
+                        
+                        tableItem[prop] = element[key]
+                    }                    
+                    tableData.push(tableItem)
+
+                }
+            }
+            // console.log('tableData', tableData);
+            
+            // console.log('columnList', columnList);
+            return {
+                columnList: columnList,
+                tableData:tableData
+            }
+        },
+
+        //  分割表格数据方法
+        getTableData(data){
+            console.log('提取表格数据', data);
+        },
+        
         readExcel(file) {
         const fileReader = new FileReader();
             fileReader.onload = ev => {
