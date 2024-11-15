@@ -7,6 +7,7 @@
     <!-- 表头 -->
     <div class="table-header">{{tableHeader}}</div>
     <div class="table-sub-header">{{tableSubHeader}}</div>
+    <!-- 数据展示表头 -->
     <el-table
         v-loading="false"
         ref="scroll_table"
@@ -24,8 +25,8 @@
       >
       <el-table-column
         v-if="firstColumn"
-        :prop="firstColumn.prop"
-        :label="firstColumn.label"
+        :prop="firstColumn[0].prop"
+        :label="firstColumn[0].label"
         style="width: 100%"
         >
             <el-table-column
@@ -38,8 +39,64 @@
             >
             </el-table-column>
         </el-table-column>
+        <!--  -->
+        <template   slot="append">
+             <el-table style="width:100%">
+                <!-- 合并的表头 -->
+                <el-table-column
+                    :colSpan=2
+                    prop="date"
+                    label="第一表头"
+                    >
+                </el-table-column>
+                <el-table-column
+                    :colSpan=0
+                    prop="date"
+                    label=""
+                    >
+                </el-table-column>
+                <!-- 拆分单元格的表头 -->
+                <el-table-column
+                    :rowSpan=0
+                    prop="date"
+                    label=""
+                    >
+                    <el-table-column
+                        :rowSpan=0
+                        prop="date"
+                        label=""
+                        >
+                        <el-table-column
+                            :rowSpan=0
+                            prop="date"
+                            label=""
+                            >
+                            
+                        </el-table-column>
+                        
+                    </el-table-column>
+                    <el-table-column
+                        :rowSpan=0
+                        prop="date"
+                        label=""
+                        >
+                        <el-table-column
+                            :rowSpan=0
+                            prop="date"
+                            label=""
+                            >
+                            
+                        </el-table-column>
+                        
+                    </el-table-column>
 
+                </el-table-column>
+
+
+            </el-table>
+        </template>
       </el-table>
+      <!-- 展示 -->
     </div>
 </template>
 
@@ -57,6 +114,7 @@
         dataStartIndex: 1,//   从第二位开始
         firstColumn: null,
         firstColumnList: [],
+        firstColumn: null,
         showUpload: true,
         tableSubHeader:'',
         tableHeader: '',
@@ -236,7 +294,7 @@
             //  判断元素是否滚动到底部
             // console.log(divData.clientHeight + divData.scrollTop, divData.scrollHeight);
             
-            if (divData.clientHeight + divData.scrollTop == divData.scrollHeight - 0.25) {
+            if (divData.clientHeight + divData.scrollTop == divData.scrollHeight) {
                 //  重置table距离顶部距离
                 divData.scrollTop = 0
                 //  更改sheet数据
@@ -266,74 +324,45 @@
             try {
             const data = ev.target.result;
             const workbook = read(data, { type: 'binary' });
-            console.log('workbook', workbook);
+            // console.log('workbook', workbook);
             
             const params = [];
             // 取对应表生成json表格内容
             workbook.SheetNames.forEach(item => {
-                // columnList: columnList,
-                // tableData:tableData
-                const {columnList, tableData} = this.getHeadersAndData(utils.sheet_to_json(workbook.Sheets[item]))
-                console.log('columns:', columnList, 'data', tableData);
+                console.log('读取到的数据：', utils.sheet_to_json(workbook.Sheets[item]));
+                
+                const {firstColumnList, columnList, tableData} = this.getHeadersAndData(utils.sheet_to_json(workbook.Sheets[item]))
+                // console.log('columns:', columnList, 'data', tableData, 'firstColumnList', firstColumnList);
                 
                 params.push({
                 name: item,
-                dataList: utils.sheet_to_json(workbook.Sheets[item])
+                dataList: tableData
                 });
-                this.tableData.push(this.getTableData(utils.sheet_to_json(workbook.Sheets[item])));
+                this.firstColumnList.push(firstColumnList)
+                this.columnsList.push(columnList)
+                this.tableData.push(tableData);
             });        
 
+
             // 该算法仅针对表头无合并的情况
-            if (this.tableData.length > 0) {
-                this.sheetLength = this.tableData.length
-                // 获取excel中第一个表格数据tableData[0][0]，并且将表头提取出来
-                for (let i = 0; i < this.tableData.length; i++) {
-                    
-                    const columns = []
-                    if (i === 1) {
-                        this.firstColumnList.push(
-                            {
-                                label: this.tableData[i][0],
-                                prop: this.tableData[i][0],
-                            }
-                        )
-                    }else{
-                        
-                        for (const key in this.tableData[i][1]) {
-                            const column = {
-                                label: key,
-                                prop: key,
-                            }
-                            columns.push(column)
-                            this.columnsList.push(columns)
-                        }
-                    }
-                }
-                
-                for (const key in this.tableData[0][0]) {
-                this.tableHead.push(key);
-                }
-            }            
             //  存放全部sheet数据
             this.sheetList = JSON.parse(JSON.stringify(params))
             
             this.sheetLength = params.length
             
             if(params.length > 0){
+                console.log('表头', this.columnsList[0]);
+                
                 this.columns = this.columnsList[0]
                 this.tableHeader = params[0].name
-                this.showData = params[0].dataList.shift()
-                console.log('展示数据', params[0]);
                 
-                         
-                // const column = {
-                //     label: this.columnsList[0][0],
-                //     prop: this.columnsList[0][0],
-                //     rowSpan: this.firstColumnList.length
-                // }
-                const column = JSON.parse(JSON.stringify(this.columnsList[0][0]))
-                column.rowSpan = this.firstColumnList.length     
-                this.firstColumn = column
+                
+                this.showData = this.tableData[0]
+                console.log('展示数据',this.showData);
+                
+                console.log('第一表格头',this.firstColumnList[0]);
+                
+                this.firstColumn = this.firstColumnList[0]
             }
             this.changeFullscreen()
             //  赋值sheetName
@@ -362,12 +391,34 @@
             this.readExcel(files);
         },
         getHeadersAndData(data){
+            //  增加获取最后两行数据
             // console.log('提取表头', data);
             const oldKey = [];
             const columnList = []
+            const firstColumnList = []
+            const firstColumnListTemp = []
             const tableData = []
+            let rowSpan = 0
+            if (data.length > 0) {
+                const element = data[0]
+                for (const key in element) {
+                        const column = {
+                            label: key,
+                            prop: key
+                        }
+                        rowSpan++
+                    firstColumnListTemp.push(column)
+                }
+                //  计算行扩展长度
+                firstColumnListTemp[0].rowspan = rowSpan
+                //  取第一个可以当返回数据
+                firstColumnList.push(firstColumnListTemp[0])
+            }
+            console.log('firstColumnList', firstColumnList);
+            
             for (let i = 0; i < data.length; i++) {
                 const element = data[i]
+
                 if (i<this.dataStartIndex) {
                     for (const key in element) {
                         if (Object.prototype.hasOwnProperty.call(element, key)) {
@@ -380,8 +431,8 @@
                             columnList.push(column)
                         }
                     }
-                }
-                if (i>this.dataStartIndex){
+                }else if (i>this.dataStartIndex && i <data.length-2){
+                    
                     const tableItem = {}
                     for (let j = 0; j < oldKey.length; j++) {
                         const key = oldKey[j];
@@ -392,6 +443,12 @@
                     }                    
                     tableData.push(tableItem)
 
+                }else if (i>this.dataStartIndex && i >=data.length-2) {
+                    console.log('i',i,'data.length',data.length);
+
+                    //  处理最后两行数据
+                    console.log('最后两行：', element);
+                    //  生成第二表表头
                 }
             }
             // console.log('tableData', tableData);
@@ -399,7 +456,8 @@
             // console.log('columnList', columnList);
             return {
                 columnList: columnList,
-                tableData:tableData
+                tableData:tableData,
+                firstColumnList: firstColumnList
             }
         },
 
